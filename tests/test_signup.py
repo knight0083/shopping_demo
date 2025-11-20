@@ -11,8 +11,7 @@ def test_signup_success(browser, base_url, wait):
     wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys(username)
     browser.find_element(By.NAME, "password").send_keys(password)
     browser.find_element(By.XPATH, "//button[text()='Signup']").click()
-    #time.sleep(1)
-    wait.unitil_not(EC.url_contains("signup"))
+    time.sleep(1)
 
     # 회원가입 성공 시 URL이 signup이 아니어야 함
     assert "signup" not in browser.current_url.lower()
@@ -27,8 +26,7 @@ def test_signup_then_login(browser, base_url, wait):
     wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys(username)
     browser.find_element(By.NAME, "password").send_keys(password)
     browser.find_element(By.XPATH, "//button[text()='Signup']").click()
-    #time.sleep(1)
-    wait.unitil_not(EC.url_contains("signup"))
+    time.sleep(1)
 
     # 로그인
     browser.get(f"{base_url}/login")
