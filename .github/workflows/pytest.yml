@@ -1,37 +1,38 @@
-name : Run Pytest
+name: Run Pytest
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch:  # ✅ 수동 실행도 가능하게
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with: python-version: "3.11"
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest pytest-html selenium webdriver-manager
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
 
-      - name: Start Flask server
-        run: |
-          nohup python app.py > flask.log 2>&1 &
-          sleep 5
-      
-      - name: show Flask logs
-        run:  cat flask.log
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pytest pytest-html selenium webdriver-manager
 
-      - name: Run tests
-        run: |
-          pytest --base-url http://127.0.0.1:5000 --headless --html=report.html
+    - name: Start Flask server
+      run: |
+        nohup python app.py > flask.log 2>&1 &
+        sleep 5
+
+    - name: Show Flask logs
+      run: cat flask.log
+
+    - name: Run tests
+      run: |
+        pytest --base-url http://127.0.0.1:5000 --headless --html=report.html
