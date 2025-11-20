@@ -12,27 +12,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"   # 필요하면 여기 버전 바꿔도 됨
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-        pip install pytest pytest-html selenium webdriver-manager
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
 
-    - name: Start Flask server
-      run: |
-        nohup python app.py > flask.log 2>&1 &
-        sleep 5
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          # 혹시 requirements에 없어도 대비해서 한 번 더 보강
+          pip install pytest pytest-html selenium webdriver-manager
 
-    - name: Show Flask logs
-      run: cat flask.log
+      - name: Start Flask server
+        run: |
+          nohup python app.py > flask.log 2>&1 &
+          sleep 5
 
-    - name: Run tests
-      run: |
-        pytest --base-url http://127.0.0.1:5000 --headless --html=report.html
+      - name: Show Flask logs
+        if: always()
+        run: cat flask.log
+
+      - name: Run tests
+        run: |
+          pytest --base-url http://127.0.0.1:5000 --headless --html=report.html
+
+      - name: Upload pytest HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report
+          path: report.html
