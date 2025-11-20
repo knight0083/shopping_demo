@@ -1,0 +1,16 @@
+<h1>Demo Shop</h1>
+
+{% if session.get("user") %}
+<p id="welcome-text">Welcome, {{ session["user"] }}!</p>
+{% else %}
+<p id="welcome-text">Not logged in</p>
+{% endif %}
+
+<ul>
+  {% for product in products %}
+  <li>{{ product.name }} - ${{ product.price }}
+    <a href="{{ url_for('add_to_cart', product_id=product.id) }}" data-test="add-to-cart">Add to Cart</a>
+  </li>
+  {% endfor %}
+</ul>
+<a href="{{ url_for('view_cart') }}">View Cart</a>
